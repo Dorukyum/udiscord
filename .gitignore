@@ -1,0 +1,7 @@
+# bytecode
+__pycache__/**
+
+# testing
+test.py
+boot.py
+
