@@ -8,6 +8,8 @@
 
 A minimalistic Discord API wrapper for microcontrollers
 
+⚠️ This library is currently being developed.
+
 ## Key Features
 - Complete gateway implementation
 - Asynchronous (`async` & `await`)
