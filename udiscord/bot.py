@@ -61,7 +61,7 @@ class Bot:
     async def send_heartbeat(self) -> None:
         await self.send(
             {
-                "op": 1,
+                "op": self.HEARTBEAT,
                 "d": self.sequence,
             }
         )
@@ -81,7 +81,7 @@ class Bot:
     async def identify(self) -> None:
         await self.send(
             {
-                "op": 2,
+                "op": self.IDENTIFY,
                 "d": {
                     "token": self.token,
                     "intents": self.intents,
@@ -116,7 +116,7 @@ class Bot:
     async def resume(self) -> None:
         await self.send(
             {
-                "op": 6,
+                "op": self.RESUME,
                 "d": {
                     "token": self.token,
                     "session_id": self.session_id,
