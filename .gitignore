@@ -3,5 +3,5 @@ __pycache__/**
 
 # testing
 test.py
-boot.py
+main.py
 
