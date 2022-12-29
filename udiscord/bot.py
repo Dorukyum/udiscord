@@ -7,14 +7,7 @@ from random import random
 import network
 import uasyncio
 from async_websocket_client import AsyncWebsocketClient
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    const = lambda x: x
-
-
-__all__ = ("Bot",)
+from micropython import const
 
 
 class Bot:
