@@ -43,7 +43,7 @@ class Bot:
             time.sleep(1)
             attempt += 1
             if attempt == attempts:
-                raise RuntimeError('Could not establish WLAN connection to "{ssid}".')
+                raise RuntimeError(f'Could not establish WLAN connection to "{ssid}".')
 
         print(f'WLAN connected to "{ssid}".')
 
