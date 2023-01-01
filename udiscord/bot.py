@@ -1,13 +1,13 @@
 # pyright: reportMissingImports=false
-
 import os
 import time
 from random import random
 
 import network
 import uasyncio
-from async_websocket_client import AsyncWebsocketClient
 from micropython import const
+
+from .websocket import WebsocketClient
 
 
 class Bot:
@@ -28,8 +28,7 @@ class Bot:
 
     def __init__(self, *, intents: int = 0) -> None:
         self.intents = intents
-
-        self.socket = AsyncWebsocketClient()
+        self.socket = WebsocketClient()
 
     def connect_wlan(self, ssid: str, key: str, attempts: int = 3) -> None:
         """Establish a WLAN connection."""
@@ -48,11 +47,8 @@ class Bot:
 
         print(f'WLAN connected to "{ssid}".')
 
-    async def send(self, payload: dict) -> None:
-        await self.socket.send(payload)
-
     async def send_heartbeat(self) -> None:
-        await self.send(
+        await self.socket.send(
             {
                 "op": self.HEARTBEAT,
                 "d": self.sequence,
@@ -69,10 +65,10 @@ class Bot:
                 await self.send_heartbeat()
                 self._heartbeat_ack = False
             else:
-                ...  # todo: await self.close()
+                await self.socket.close()
 
     async def identify(self) -> None:
-        await self.send(
+        await self.socket.send(
             {
                 "op": self.IDENTIFY,
                 "d": {
@@ -92,14 +88,14 @@ class Bot:
         )
 
     async def receive(self) -> None:
-        while await self.socket.open():
+        while self.socket.open:
             data = await self.socket.recv()
             if data is not None:
                 print(f"[RECV] {data}")
 
     async def connect(self) -> None:
         """Connect to the Discord gateway."""
-        await self.socket.handshake("wss://gateway.discord.gg/?v=10&encoding=json")
+        await self.socket.connect()
         if self.session_id:
             await self.resume()
         else:
@@ -107,7 +103,7 @@ class Bot:
         await uasyncio.create_task(self.receive())
 
     async def resume(self) -> None:
-        await self.send(
+        await self.socket.send(
             {
                 "op": self.RESUME,
                 "d": {
