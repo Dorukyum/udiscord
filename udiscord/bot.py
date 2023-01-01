@@ -30,7 +30,7 @@ class Bot:
         self.intents = intents
         self.socket = WebsocketClient()
 
-    def connect_wlan(self, ssid: str, key: str, attempts: int = 3) -> None:
+    def connect_wlan(self, ssid: str, key: str, attempts: int = 5) -> None:
         """Establish a WLAN connection."""
         wlan = network.WLAN(network.STA_IF)
         wlan.active(True)
