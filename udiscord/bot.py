@@ -7,6 +7,7 @@ import network
 import uasyncio
 from micropython import const
 
+from .presence import Activity
 from .websocket import WebsocketClient
 
 
@@ -26,7 +27,15 @@ class Bot:
     HELLO = const(10)
     ACK = const(11)
 
-    def __init__(self, *, intents: int = 0) -> None:
+    def __init__(
+        self,
+        *,
+        activity: Activity | None = None,
+        status: str | None = None,
+        intents: int = 0,
+    ) -> None:
+        self.activity = activity
+        self.status = status
         self.intents = intents
         self.socket = WebsocketClient()
 
@@ -79,10 +88,12 @@ class Bot:
                         "browser": "udiscord",
                         "device": "udiscord",
                     },
-                    # "presence": {
-                    #     "activities": [{"name": "with the API", "type": 0}],
-                    #     "status": "idle",
-                    # },
+                    "presence": {
+                        "activities": [self.activity.to_dict()]
+                        if self.activity
+                        else [],
+                        "status": self.status or "online",
+                    },
                 },
             }
         )
